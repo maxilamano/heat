@@ -17,6 +17,10 @@ intCenterY       = y //+ (sprite_height/2)
 
 
 
+//Direccion sprite
+image_xscale = objGun.image_yscale;
+
+
 //eje x
 if(intMove!=0){
     if(abs(intSpeedX + (intAcc * intMove)) < intMaxSpeedX){
@@ -36,16 +40,14 @@ else{
 }
 x+=intSpeedX
 
+
 //eje y
 if (bolGround){
     intSpeedY = 0;
-    if(keyJump){
-        intSpeedY += intJumpForce
-    }
 }else{
-    if(keyJumpRelease){
+    /*if(keyJumpRelease){
         intSpeedY *= 0.6
-    }
+    }*/ //soltar salto
     //gravedad
     if (abs(intSpeedY + intGravity)< intMaxSpeedY){
         intSpeedY += intGravity;
@@ -53,29 +55,15 @@ if (bolGround){
     else intSpeedY = intMaxSpeedY
 }
 
-if (!place_meeting(x,y+intSpeedY,objBlock)){
-    y+=intSpeedY;
-}
-else{
-    repeat(abs(intSpeedY)){
-        if(!place_meeting(x,y+1,objBlock)){
-            y++
-        }
-        else break;
-    }
-}
-
 //disparo
 if(keyShoot and intRTLeft <= 0){
     instance_create_depth(objGun.x,objGun.y,4,objBullet)
     intRTLeft = intReloadTime;
 	intDirection = point_direction(x,y,mouse_x,mouse_y);
-	intSpeedX += (-lengthdir_x(intKnockback,intDirection));
-	intSpeedY += (-lengthdir_y(intKnockback,intDirection));
+	intSpeedX = (-lengthdir_x(intKnockback,intDirection)); //knockback horizontal
+	intSpeedY = (-lengthdir_y(intKnockback,intDirection)); //knockback vertical
 	
-	if(intSpeedY < 0 and bolGround){
-		y --;
-	}
+	
 	
 	if (global.intTemperature + 5 < 100){
 		global.intTemperature += 5; //subir temperatura
@@ -88,5 +76,18 @@ if(keyShoot and intRTLeft <= 0){
 else{
     if(intRTLeft > 0){
         intRTLeft--;
+    }
+}
+
+//termino eje y
+if (!place_meeting(x,y+intSpeedY,objBlock)){
+    y+=intSpeedY;
+}
+else{
+    repeat(abs(intSpeedY)){
+        if(!place_meeting(x,y+1,objBlock)){
+            y++
+        }
+        else break;
     }
 }
