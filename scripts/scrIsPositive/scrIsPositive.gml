@@ -1,4 +1,4 @@
-/// @function move_follow(object, speed);
+/// @function scrIsPositive(num);
 /// @param {num} number
 function scrIsPositive(num){
 	if (num == 0){
